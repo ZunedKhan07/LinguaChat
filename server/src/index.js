@@ -14,13 +14,20 @@ connect_DB();
 
 app.use(cors({
     origin: "http://localhost:5173",
-    credentials: true,
+    credentials: true
   }));
 app.use(express.json());
 app.use(cookieParser());
 
+import authRouter from "./routes/auth.route.js";
+import translateRouter from "./routes/chat.route.js";
+
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/translate", translateRouter)
+
+
 app.get("/", (req, res) => {
-    res.send("✅ Hello 👋, This is the backend of CareerWithAI!");
+    res.send("✅ Hello 👋, This is the backend of LinguaChat!");
 })
 
 const PORT = process.env.PORT || 5000;

@@ -22,7 +22,8 @@ const userSchema = new mongoose.Schema({
     preferredLanguage: {
         type: String,
         required: true,
-        default: "English"
+        enum: ["en", "hi", "es", "fr", "ar"],
+        default: "en"
     }
 },
     {timestamps: true}

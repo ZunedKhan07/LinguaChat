@@ -1,11 +1,18 @@
-import React from 'react'
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Chat from "./components/Chat";
 
-const App = () => {
+function App() {
   return (
-    <div className='bg-amber-400'>
-      Hello!
-    </div>
-  )
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/chat" element={<Chat />} />
+      </Routes>
+    </Router>
+  );
 }
-
-export default App
+export default App;
