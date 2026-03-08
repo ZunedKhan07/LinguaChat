@@ -223,7 +223,7 @@ const ChatSimulation = () => {
 
             <input
               className="flex-1 bg-gray-700 p-2 rounded-xl outline-none border border-transparent focus:ring-2 focus:ring-blue-500 transition-all"
-              placeholder="Message likho..."
+              placeholder="Type message here..."
               value={inputs[user._id]}
               onChange={(e) =>
                 setInputs((prev) => ({
