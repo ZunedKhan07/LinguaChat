@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { socket } from '../socket';
+import { socket } from '../socket'; // Singleton socket instance
 import api from '../api/axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Languages, User as UserIcon, LogOut } from 'lucide-react';
@@ -47,7 +47,7 @@ const Chat = () => {
 
         setLoading(prev => ({ ...prev, [index]: true }));
         try {
-            const res = await api.post("/translate/process", {
+            const res = await api.post("/translate/translate-message", {
                 text,
                 targetLang: user.preferredLanguage || "hi",
                 senderId: user._id,
@@ -77,7 +77,7 @@ const Chat = () => {
             <div className="p-2 bg-gray-800/50">
                 <input 
                     className="w-full bg-transparent border-b border-gray-700 p-2 outline-none text-sm text-gray-400"
-                    placeholder="Enter Receiver ID ..."
+                    placeholder="Receiver ID enter karein..."
                     value={receiverId}
                     onChange={(e) => setReceiverId(e.target.value)}
                 />
@@ -129,7 +129,7 @@ const Chat = () => {
                 <div className="flex gap-2 items-center max-w-4xl mx-auto">
                     <input 
                         className="flex-1 bg-gray-700 p-3 rounded-xl outline-none focus:ring-2 focus:ring-blue-500 transition-all border border-transparent"
-                        placeholder="for messages..." 
+                        placeholder="Message likho..." 
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}

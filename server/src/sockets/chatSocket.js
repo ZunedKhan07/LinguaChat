@@ -1,8 +1,9 @@
 import { Server } from "socket.io";
 
-const chatSocketMap = {}; 
+const users = {};
 
 const setupSocket = (server) => {
+
   const io = new Server(server, {
     cors: {
       origin: "http://localhost:5173",
@@ -12,39 +13,55 @@ const setupSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log(`🟢 New Connection: ${socket.id}`);
+    console.log("🟢 Socket Connected:", socket.id);
 
+    // USER JOIN
     socket.on("join", (userId) => {
-      if (userId) {
-        chatSocketMap[userId] = socket.id;
-        socket.userId = userId;
-        console.log(`👤 User ${userId} is online.`);
-      }
+      if (!userId) return;
+
+      users[userId] = socket.id;
+      socket.userId = userId;
+
+      console.log(`👤 User Joined: ${userId}`);
+      console.log("📌 Users Map:", users);
     });
 
-    socket.on("send_message", async (data) => {
-      const { senderId, receiverId, message } = data;
+    // SEND MESSAGE
+    socket.on("send_message", (data) => {
 
-      const receiverSocketId = chatSocketMap[receiverId];
+      const senderId = String(data.senderId).trim();
+      const receiverId = String(data.receiverId).trim();
       
-      if (receiverSocketId) {
-        io.to(receiverSocketId).emit("receive_message", {
-          senderId,
-          text: message,
-          originalText: message
-        });
-        console.log(`📩 Message sent from ${senderId} to ${receiverId}`);
-      } else {
-        console.log(`⚠️ Receiver ${receiverId} is offline.`);
+      console.log("All users:", users);
+      console.log("Sender:", senderId, "Receiver:", receiverId);
+
+      const message = data.message;
+
+      const receiverSocket = users[receiverId];
+
+      const payload = {
+        senderId,
+        text: message
+      };
+
+      console.log("📤 Sending:", senderId, "→", receiverId);
+      console.log("Receiver Socket:", receiverSocket);
+
+      // SEND TO RECEIVER
+      if (receiverSocket) {
+        io.to(receiverSocket).emit("receive_message", payload);
       }
-    });
+  });
 
     socket.on("disconnect", () => {
+
       if (socket.userId) {
-        delete chatSocketMap[socket.userId]; // Map se hata do
-        console.log(`🔴 User ${socket.userId} disconnected.`);
+        delete users[socket.userId];
+        console.log(`🔴 User Disconnected: ${socket.userId}`);
       }
+
     });
+
   });
 
   return io;

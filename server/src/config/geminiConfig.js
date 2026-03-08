@@ -7,5 +7,5 @@ if (!process.env.GEMINI_KEY) {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
 
 export const model = genAI.getGenerativeModel({
-    model: "gemini-3-flash-preview"
+    model: "gemini-3.1-flash-lite-preview"
 })
